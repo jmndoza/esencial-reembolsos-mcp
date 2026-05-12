@@ -11,7 +11,6 @@ LOGIN_PROMPT = (
 SESSION_SAVED = "✅ Sesión guardada correctamente."
 
 ERR_NO_CREDENTIALS = (
-    "No se pudieron obtener las credenciales. "
-    "¿Llegaste al dashboard antes de hacer clic en OK?"
+    "No se pudieron obtener las credenciales. ¿Llegaste al dashboard antes de hacer clic en OK?"
 )
 ERR_EXTRACT_SESSION = "Error extrayendo sesión:\n{error}"
