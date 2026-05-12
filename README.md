@@ -40,20 +40,22 @@ Agrega al `claude_desktop_config.json`:
 | `about` | Información del servidor |
 | `auth` | Abre Chrome para hacer login en Isapre Esencial |
 | `logout` | Elimina la sesión guardada del Keychain |
+| `list_refunds` | Lista solicitudes de reembolso (active / resolved) con paginación |
+| `refund_detail` | Detalle completo de un reembolso resuelto (líneas, montos, prestador) |
+| `list_documents` | Documentos (boletas/facturas) adjuntos en solicitudes activas y resueltas |
+| `read_active_documents` | Descarga y extrae texto de los PDFs de solicitudes activas |
+| `refunds_summary` | Totales rápidos de solicitudes activas y resueltas |
 
 ## Roadmap
 
 - [x] Autenticación interactiva con Chrome + CDP
 - [x] Persistencia de sesión en Keychain de macOS
-- [x] Tools MCP de auth y logout
-- [ ] Cliente HTTP base con bypass de DataDome (`curl-cffi`)
-- [ ] Listado de reembolsos activos y resueltos
-- [ ] Detalle de reembolsos resueltos (montos de bono, copago, costo)
-- [ ] Lectura de PDFs subidos para detección de duplicados
-- [ ] Resumen general de reembolsos
-- [ ] Verificación de duplicados por folio SII / RUT prestador
+- [x] Cliente HTTP base con bypass de DataDome (`curl-cffi`)
+- [x] Listado y detalle de reembolsos (active / resolved)
+- [x] Lectura de PDFs subidos para detección de duplicados
+- [x] Resumen general de reembolsos
 - [ ] Subir nueva solicitud de reembolso
 
 ## Disclaimer
 
-Este proyecto no está afiliado ni es aprobado por Isapre Esencial.
+Este proyecto no está afiliado ni es aprobado por Isapre Esencial. Usa la API interna de Esencial mediante ingeniería inversa, por lo que puede dejar de funcionar sin previo aviso.
