@@ -5,7 +5,6 @@ authentication (RUT, password, captcha, 2FA), connects via CDP to extract
 cookies and the Auth0 access token from localStorage.
 """
 
-import subprocess
 from concurrent.futures import ThreadPoolExecutor
 
 from playwright.sync_api import sync_playwright
@@ -19,13 +18,8 @@ from esencial.auth.messages import (
 )
 from esencial.auth.models import SessionData
 from esencial.auth.session import save_session
-from esencial.config import (
-    CDP_PORT,
-    CHROME_BIN,
-    CHROME_PROFILE_DIR,
-    DASHBOARD_URL,
-    LOGIN_URL,
-)
+from esencial.auth.system import launch_chrome, show_dialog
+from esencial.config import CDP_PORT, DASHBOARD_URL, LOGIN_URL
 
 ESENCIAL_COOKIE_DOMAINS = [
     "https://sucursalvirtual.somosesencial.cl",
@@ -44,50 +38,25 @@ def login() -> bool:
     Returns:
         True on success, False if credential extraction failed.
     """
-    proc = _launch_chrome(LOGIN_URL)
+    proc = launch_chrome(LOGIN_URL)
     try:
-        _show_dialog(LOGIN_PROMPT)
+        show_dialog(LOGIN_PROMPT, DIALOG_TITLE)
         with ThreadPoolExecutor(max_workers=1) as ex:
             session_data = ex.submit(_extract_session_via_cdp).result()
 
         if not session_data or not session_data.cookies or not session_data.token.access_token:
-            _show_dialog(ERR_NO_CREDENTIALS)
+            show_dialog(ERR_NO_CREDENTIALS, DIALOG_TITLE)
             return False
 
         save_session(session_data)
-        _show_dialog(SESSION_SAVED)
+        show_dialog(SESSION_SAVED, DIALOG_TITLE)
         return True
 
     except Exception as e:
-        _show_dialog(ERR_EXTRACT_SESSION.format(error=e))
+        show_dialog(ERR_EXTRACT_SESSION.format(error=e), DIALOG_TITLE)
         return False
     finally:
         proc.terminate()
-
-
-def _show_dialog(message: str) -> None:
-    """Show a native macOS dialog with an OK button. Blocks until clicked."""
-    safe = message.replace("\\", "\\\\").replace('"', '\\"')
-    subprocess.run(
-        [
-            "osascript", "-e",
-            f'display dialog "{safe}" with title "{DIALOG_TITLE}" '
-            f'buttons {{"OK"}} default button "OK"',
-        ],
-        capture_output=True,
-    )
-
-
-def _launch_chrome(url: str) -> subprocess.Popen:
-    """Launch Chrome with CDP enabled and a dedicated user profile."""
-    CHROME_PROFILE_DIR.mkdir(parents=True, exist_ok=True)
-    return subprocess.Popen([
-        CHROME_BIN,
-        f"--remote-debugging-port={CDP_PORT}",
-        f"--user-data-dir={CHROME_PROFILE_DIR}",
-        "--start-maximized",
-        url,
-    ])
 
 
 def _extract_session_via_cdp() -> SessionData | None:
