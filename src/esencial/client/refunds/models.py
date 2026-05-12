@@ -50,9 +50,7 @@ class RefundRequest(BaseModel):
     status: str
     beneficiary_name: str = ""
     beneficiary_rut: str = ""
-    refund_type: str = Field(
-        default="", validation_alias=AliasPath("refund", "refund_type")
-    )
+    refund_type: str = Field(default="", validation_alias=AliasPath("refund", "refund_type"))
     sent_at: str = ""
     created_at: str = ""
     files: list[RefundFile] = Field(default_factory=list, alias="requestFiles")

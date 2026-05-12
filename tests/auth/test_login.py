@@ -21,13 +21,15 @@ def _empty_session() -> SessionData:
 
 
 def test_login_saves_session_and_returns_true_on_success():
-    with patch("esencial.auth.login.launch_chrome", return_value=MagicMock()), \
-         patch("esencial.auth.login.show_dialog"), \
-         patch(
-             "esencial.auth.login._extract_session_via_cdp",
-             return_value=_valid_session(),
-         ), \
-         patch("esencial.auth.login.save_session") as mock_save:
+    with (
+        patch("esencial.auth.login.launch_chrome", return_value=MagicMock()),
+        patch("esencial.auth.login.show_dialog"),
+        patch(
+            "esencial.auth.login._extract_session_via_cdp",
+            return_value=_valid_session(),
+        ),
+        patch("esencial.auth.login.save_session") as mock_save,
+    ):
         result = login()
 
     assert result is True
@@ -35,13 +37,15 @@ def test_login_saves_session_and_returns_true_on_success():
 
 
 def test_login_returns_false_and_skips_save_when_credentials_missing():
-    with patch("esencial.auth.login.launch_chrome", return_value=MagicMock()), \
-         patch("esencial.auth.login.show_dialog"), \
-         patch(
-             "esencial.auth.login._extract_session_via_cdp",
-             return_value=_empty_session(),
-         ), \
-         patch("esencial.auth.login.save_session") as mock_save:
+    with (
+        patch("esencial.auth.login.launch_chrome", return_value=MagicMock()),
+        patch("esencial.auth.login.show_dialog"),
+        patch(
+            "esencial.auth.login._extract_session_via_cdp",
+            return_value=_empty_session(),
+        ),
+        patch("esencial.auth.login.save_session") as mock_save,
+    ):
         result = login()
 
     assert result is False
@@ -50,13 +54,15 @@ def test_login_returns_false_and_skips_save_when_credentials_missing():
 
 def test_login_terminates_chrome_process_even_on_failure():
     proc = MagicMock()
-    with patch("esencial.auth.login.launch_chrome", return_value=proc), \
-         patch("esencial.auth.login.show_dialog"), \
-         patch(
-             "esencial.auth.login._extract_session_via_cdp",
-             return_value=_empty_session(),
-         ), \
-         patch("esencial.auth.login.save_session"):
+    with (
+        patch("esencial.auth.login.launch_chrome", return_value=proc),
+        patch("esencial.auth.login.show_dialog"),
+        patch(
+            "esencial.auth.login._extract_session_via_cdp",
+            return_value=_empty_session(),
+        ),
+        patch("esencial.auth.login.save_session"),
+    ):
         login()
 
     proc.terminate.assert_called_once()

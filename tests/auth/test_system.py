@@ -21,9 +21,7 @@ def test_show_dialog_escapes_double_quotes():
 
 
 def test_launch_chrome_includes_cdp_port_and_url(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        "esencial.auth.system.CHROME_PROFILE_DIR", tmp_path / "chrome-profile"
-    )
+    monkeypatch.setattr("esencial.auth.system.CHROME_PROFILE_DIR", tmp_path / "chrome-profile")
     with patch("esencial.auth.system.subprocess.Popen") as mock_popen:
         launch_chrome("https://example.com")
         argv = mock_popen.call_args[0][0]

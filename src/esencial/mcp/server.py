@@ -123,18 +123,22 @@ def read_active_documents() -> dict:
             for doc in (f for f in item.files if f.uploader_type == "CLIENTE"):
                 try:
                     pdf_bytes = client.download_file(doc.document_id)
-                    documents.append({
-                        "request_folio": item.folio,
-                        "filename": doc.filename,
-                        "sent_at": item.sent_at,
-                        "text": _pdf_to_text(pdf_bytes),
-                    })
+                    documents.append(
+                        {
+                            "request_folio": item.folio,
+                            "filename": doc.filename,
+                            "sent_at": item.sent_at,
+                            "text": _pdf_to_text(pdf_bytes),
+                        }
+                    )
                 except Exception as e:
-                    errors.append({
-                        "request_folio": item.folio,
-                        "filename": doc.filename,
-                        "error": str(e),
-                    })
+                    errors.append(
+                        {
+                            "request_folio": item.folio,
+                            "filename": doc.filename,
+                            "error": str(e),
+                        }
+                    )
 
     return {"documents": documents, "errors": errors}
 

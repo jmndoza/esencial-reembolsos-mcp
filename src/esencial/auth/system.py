@@ -10,9 +10,9 @@ def show_dialog(message: str, title: str) -> None:
     safe = message.replace("\\", "\\\\").replace('"', '\\"')
     subprocess.run(
         [
-            "osascript", "-e",
-            f'display dialog "{safe}" with title "{title}" '
-            f'buttons {{"OK"}} default button "OK"',
+            "osascript",
+            "-e",
+            f'display dialog "{safe}" with title "{title}" buttons {{"OK"}} default button "OK"',
         ],
         capture_output=True,
     )
@@ -21,10 +21,12 @@ def show_dialog(message: str, title: str) -> None:
 def launch_chrome(url: str) -> subprocess.Popen:
     """Launch Chrome with CDP enabled and a dedicated user profile."""
     CHROME_PROFILE_DIR.mkdir(parents=True, exist_ok=True)
-    return subprocess.Popen([
-        CHROME_BIN,
-        f"--remote-debugging-port={CDP_PORT}",
-        f"--user-data-dir={CHROME_PROFILE_DIR}",
-        "--start-maximized",
-        url,
-    ])
+    return subprocess.Popen(
+        [
+            CHROME_BIN,
+            f"--remote-debugging-port={CDP_PORT}",
+            f"--user-data-dir={CHROME_PROFILE_DIR}",
+            "--start-maximized",
+            url,
+        ]
+    )

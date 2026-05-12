@@ -12,7 +12,6 @@ from esencial.client.refunds.models import (
 
 
 class RefundsClient:
-
     def __init__(self, client: EsencialClient | None = None):
         self._client = client or EsencialClient()
         session = load_session()
@@ -34,13 +33,16 @@ class RefundsClient:
 
         Returns {'items': list[RefundRequest], 'pagination': {...}}.
         """
-        r = self._client.get(endpoints.REFUNDS_LIST, params={
-            "rut": self.affiliate_rut,
-            "status": status,
-            "page": page,
-            "per_page": per_page,
-            "as_affiliate": "true",
-        })
+        r = self._client.get(
+            endpoints.REFUNDS_LIST,
+            params={
+                "rut": self.affiliate_rut,
+                "status": status,
+                "page": page,
+                "per_page": per_page,
+                "as_affiliate": "true",
+            },
+        )
         data = r.json()
         return {
             "items": [RefundRequest.model_validate(item) for item in data.get("items", [])],

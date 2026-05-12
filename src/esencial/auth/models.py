@@ -65,9 +65,8 @@ class LocalStorage(BaseModel):
     @property
     def affiliate_rut(self) -> str | None:
         """The affiliate's RUT, taken from whichever localStorage source has it."""
-        return (
-            getattr(self.omnitok_affiliate, "rut", None)
-            or getattr(self.selected_affiliate, "rutPar", None)
+        return getattr(self.omnitok_affiliate, "rut", None) or getattr(
+            self.selected_affiliate, "rutPar", None
         )
 
 
